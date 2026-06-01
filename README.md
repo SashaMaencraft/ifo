@@ -1,6 +1,6 @@
 # VisualVertex — Центральный портал
 
-Сайт: [https://sashamaencraft.github.io/Chernovik/](https://sashamaencraft.github.io/ifo/)
+Сайт: https://sashamaencraft.github.io/ifo/
 
 **Автор:** Александр Константинович (VisualVertex)  
 **Контакт:** drakon.karol@yandex.ru  
