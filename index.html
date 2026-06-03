@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>VisualVertex / с уведомлением</title>
+    <title>VisualVertex / мистический клуб · синяя волна</title>
     <style>
         * {
             margin: 0;
@@ -12,15 +12,38 @@
         }
 
         body {
-            background: #0b0d10;
+            background: #020617;
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: #e2e8f0;
+            color: #e2f0ff;
             line-height: 1.5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
-            background-image: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.01) 0%, transparent 40%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* мистическая анимация — волны и свечение */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 40%, rgba(0, 100, 255, 0.08) 0%, rgba(0, 20, 60, 0.4) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, rgba(0, 150, 255, 0.02) 0px, rgba(0, 150, 255, 0.02) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+            z-index: 0;
         }
 
         @font-face {
@@ -31,60 +54,64 @@
             src: url(https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa2JL7SUc.woff2) format('woff2');
         }
 
+        /* БАЗОВЫЙ СТИЛЬ КАРТОЧЕК — единый синий «клубный» */
         .glass-tile {
-            background: rgba(18, 22, 28, 0.5);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(70, 85, 105, 0.2);
-            border-radius: 24px;
-            transition: all 0.15s ease;
+            background: rgba(10, 20, 45, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 180, 255, 0.35);
+            border-radius: 28px;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(120, 200, 255, 0.1);
         }
 
         .glass-tile:hover {
-            background: rgba(28, 34, 42, 0.7);
-            border-color: rgba(130, 160, 200, 0.35);
-            transform: translateY(-2px);
+            background: rgba(25, 55, 100, 0.8);
+            border-color: #3b82f6;
+            box-shadow: 0 0 24px rgba(59, 130, 246, 0.5), 0 12px 24px -12px black;
+            transform: translateY(-3px);
         }
 
-        /* КРАСНЫЙ (важное) — НЕ ТРОГАТЬ */
+        /* КРАСНЫЕ КНОПКИ — ТОЛЬКО ДЛЯ ПЕРВОСТЕПЕННОГО (ВАЖНЫЕ) */
         .glass-tile.important {
-            border: 1.5px solid #b0003a;
-            background: rgba(30, 12, 18, 0.65);
-            box-shadow: 0 0 15px rgba(200, 0, 50, 0.25);
+            border: 1.5px solid #ff2a5e;
+            background: rgba(50, 12, 28, 0.75);
+            box-shadow: 0 0 18px rgba(255, 30, 90, 0.45), inset 0 0 8px rgba(255, 80, 120, 0.2);
         }
 
         .glass-tile.important:hover {
-            border-color: #ff4d6d;
-            background: rgba(45, 18, 24, 0.8);
-            box-shadow: 0 0 22px rgba(220, 40, 80, 0.4);
+            border-color: #ff6b8f;
+            background: rgba(80, 20, 48, 0.9);
+            box-shadow: 0 0 32px rgba(255, 60, 110, 0.65);
+            transform: translateY(-3px);
         }
 
-        /* 🔵 ГОЛУБОЙ (primary) — форумы, RP, заявки */
+        /* ГОЛУБЫЕ КАРТОЧКИ (основные сообщества) — переделаны под единый синий клуб */
         .glass-tile.primary {
             border: 1.5px solid #2c7da0;
-            background: rgba(20, 50, 70, 0.55);
-            box-shadow: 0 0 12px rgba(40, 150, 200, 0.2);
+            background: rgba(10, 45, 75, 0.7);
+            box-shadow: 0 0 14px rgba(0, 140, 210, 0.35);
         }
 
         .glass-tile.primary:hover {
             border-color: #5fceff;
-            background: rgba(35, 75, 100, 0.75);
-            box-shadow: 0 0 18px rgba(60, 180, 240, 0.35);
-            transform: translateY(-2px);
+            background: rgba(20, 85, 120, 0.85);
+            box-shadow: 0 0 28px rgba(0, 180, 255, 0.55);
+            transform: translateY(-3px);
         }
 
-        /* 🔘 ДОПОЛНИТЕЛЬНЫЙ СТИЛЬ (нейтральный серо-синий) для раздела "Дополнительные проекты" */
+        /* ДОПОЛНИТЕЛЬНЫЕ (второстепенные) — тоже глубокий синий, без лишних оттенков */
         .glass-tile.secondary {
-            border: 1px solid rgba(90, 120, 150, 0.5);
-            background: rgba(28, 35, 45, 0.65);
-            box-shadow: 0 0 6px rgba(100, 150, 200, 0.1);
+            border: 1px solid rgba(70, 140, 210, 0.6);
+            background: rgba(15, 30, 60, 0.75);
+            box-shadow: 0 0 10px rgba(40, 130, 230, 0.25);
         }
 
         .glass-tile.secondary:hover {
-            border-color: #7f9fbf;
-            background: rgba(45, 55, 70, 0.8);
-            box-shadow: 0 0 12px rgba(110, 170, 230, 0.2);
-            transform: translateY(-2px);
+            border-color: #6aa9ff;
+            background: rgba(30, 65, 105, 0.9);
+            box-shadow: 0 0 22px rgba(70, 170, 255, 0.45);
+            transform: translateY(-3px);
         }
 
         .container {
@@ -92,6 +119,8 @@
             margin: 0 auto;
             padding: 1.6rem 2rem;
             width: 100%;
+            position: relative;
+            z-index: 2;
         }
 
         .header-minimal {
@@ -107,50 +136,56 @@
 
         .logo-min {
             font-size: clamp(2rem, 7vw, 2.9rem);
-            font-weight: 650;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #f0f4fa 0%, #b8c7e0 100%);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #b9e2ff, #3b82f6, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-shadow: 0 0 12px rgba(59,130,246,0.3);
         }
 
         .descriptor {
             font-size: 0.85rem;
             font-weight: 400;
-            color: #7b8caa;
-            background: rgba(60, 80, 110, 0.2);
+            color: #80b0ff;
+            background: rgba(30, 80, 140, 0.3);
             padding: 0.25rem 1rem;
             border-radius: 40px;
-            border: 0.5px solid rgba(255,255,255,0.03);
+            border: 0.5px solid rgba(0, 200, 255, 0.25);
+            backdrop-filter: blur(4px);
         }
 
         .status-micro {
             margin: 1.8rem 0 1.5rem 0;
             padding: 0.6rem 1.2rem;
-            background: rgba(10, 14, 20, 0.3);
-            border-left: 3px solid #2f6f4a;
+            background: rgba(0, 30, 60, 0.6);
+            border-left: 3px solid #2f8fcf;
             border-radius: 0 40px 40px 0;
             width: fit-content;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
             font-size: 0.9rem;
-            color: #b6c6dd;
+            color: #c8e2ff;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            box-shadow: 0 0 6px rgba(0, 160, 255, 0.2);
         }
 
         .section-title {
-            font-size: 1.1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            color: #b7c7e0;
+            font-size: 1.15rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #a0d0ff;
             margin: 2.2rem 0 1rem 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.06);
-            padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(59,130,246,0.4);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+            text-shadow: 0 0 5px rgba(0,150,255,0.2);
         }
         .section-title:first-of-type {
             margin-top: 0.8rem;
         }
 
-        /* дополнительный отступ перед новым разделом */
         .extra-margin-top {
             margin-top: 2.2rem;
         }
@@ -158,7 +193,7 @@
         .grid-links {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 1rem;
+            gap: 1.2rem;
         }
 
         .link-card {
@@ -169,46 +204,42 @@
             color: inherit;
             word-break: break-word;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .link-title {
-            font-weight: 600;
+            font-weight: 650;
             font-size: 1.13rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 0.4rem;
-            color: #f0f5ff;
+            color: #ffffffec;
         }
 
         .link-title .badge-light {
-            background: rgba(255,255,255,0.02);
-            border: 0.5px solid rgba(255,255,255,0.08);
+            background: rgba(0, 160, 255, 0.15);
+            border: 0.5px solid rgba(0, 200, 255, 0.4);
             border-radius: 30px;
             padding: 0.15rem 0.7rem;
             font-size: 0.65rem;
             font-weight: 400;
-            color: #96abc6;
+            color: #b8dcff;
             text-transform: none;
-            letter-spacing: 0.2px;
         }
 
         .link-meta {
             font-size: 0.78rem;
-            color: #7085a5;
+            color: #7da2d4;
             margin-bottom: 0.7rem;
             font-family: 'SF Mono', 'Fira Code', monospace;
-            border-bottom: 1px dashed rgba(255,255,255,0.06);
+            border-bottom: 1px dashed rgba(0, 180, 255, 0.25);
             padding-bottom: 0.5rem;
-        }
-
-        .link-meta.hidden-url {
-            display: none;
         }
 
         .link-desc {
             font-size: 0.86rem;
-            color: #cbd5ee;
+            color: #cddfff;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -216,27 +247,29 @@
         }
 
         .minitag {
-            background: rgba(255,255,255,0.02);
+            background: rgba(30, 144, 255, 0.15);
             border-radius: 30px;
             padding: 0.15rem 0.6rem;
             font-size: 0.65rem;
-            font-weight: 400;
-            color: #9db4d0;
-            border: 0.5px solid rgba(130, 170, 250, 0.2);
+            font-weight: 500;
+            color: #b0dcff;
+            border: 0.5px solid rgba(80, 180, 255, 0.4);
             text-transform: lowercase;
         }
-        .minitag.legal { background: rgba(200, 120, 100, 0.05); color: #e2baa5; border-color: rgba(220, 130, 100, 0.15); }
-        .minitag.mc { background: rgba(70, 180, 210, 0.05); color: #b3e0f0; border-color: rgba(70, 180, 210, 0.15); }
-        .minitag.tool { background: rgba(100, 210, 170, 0.05); color: #b8f2e0; border-color: rgba(100, 210, 170, 0.2); }
-        .minitag.game { background: rgba(210, 180, 100, 0.08); color: #f9e7b3; border-color: rgba(220, 180, 70, 0.2); }
+        .minitag.legal { background: rgba(200, 120, 150, 0.2); color: #f0b0c0; border-color: rgba(255, 100, 130, 0.3); }
+        .minitag.mc { background: rgba(0, 200, 255, 0.2); color: #b3f0ff; border-color: rgba(0, 210, 255, 0.5); }
+        .minitag.tool { background: rgba(50, 190, 150, 0.2); color: #b8ffe0; border-color: rgba(80, 220, 150, 0.4); }
+        .minitag.game { background: rgba(180, 130, 255, 0.2); color: #decbff; border-color: rgba(160, 100, 255, 0.4); }
 
+        /* подвал — клубная глубина */
         .footer-min {
             margin-top: 3rem;
             padding: 1.8rem 2rem 1.5rem;
-            background: rgba(8, 10, 14, 0.7);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(255,255,255,0.02);
+            background: rgba(2, 10, 30, 0.8);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(0, 150, 255, 0.3);
             border-radius: 36px 36px 24px 24px;
+            box-shadow: 0 -4px 30px rgba(0, 20, 80, 0.6);
         }
 
         .footer-row {
@@ -249,15 +282,16 @@
 
         .ip-block .ip-name {
             font-size: 1.5rem;
-            font-weight: 550;
-            color: #d1e0f5;
+            font-weight: 600;
+            color: #cce6ff;
             letter-spacing: -0.3px;
+            text-shadow: 0 0 5px #2f6fcf;
         }
         .ip-block .ip-desc {
             font-size: 0.9rem;
-            color: #8fa3c0;
+            color: #8bb3df;
             margin: 0.3rem 0 1rem 0;
-            border-left: 2px solid #3a6f5a;
+            border-left: 2px solid #3b82f6;
             padding-left: 1rem;
         }
         .legal-numbers {
@@ -265,16 +299,16 @@
             flex-wrap: wrap;
             gap: 1.2rem 2.5rem;
             font-size: 0.8rem;
-            color: #7b8fab;
+            color: #7b9fcf;
         }
-        .legal-numbers span { display: block; font-weight: 500; color: #cad9f0; font-size: 0.7rem; opacity: 0.9; }
+        .legal-numbers span { display: block; font-weight: 500; color: #b0d4ff; font-size: 0.7rem; opacity: 0.9; }
 
         .footer-end {
             text-align: right;
-            color: #6c7fa0;
+            color: #6c8fc0;
             font-size: 0.85rem;
         }
-        .footer-end strong { color: #b7cef0; font-weight: 500; }
+        .footer-end strong { color: #8bbfff; font-weight: 600; }
 
         .action-links {
             display: flex;
@@ -283,34 +317,35 @@
             margin-top: 0.6rem;
         }
         .action-links a {
-            color: #96b2dc;
+            color: #7dabee;
             text-decoration: none;
             font-size: 0.8rem;
             border-bottom: 1px dotted transparent;
             cursor: pointer;
+            transition: 0.2s;
         }
-        .action-links a:hover { border-bottom-color: #96b2dc; }
+        .action-links a:hover { border-bottom-color: #7dabee; color: #bbd6ff; }
 
         hr {
             border: none;
-            border-top: 0.5px solid rgba(255,255,255,0.03);
+            border-top: 0.5px solid rgba(59, 130, 246, 0.4);
             margin: 1.5rem 0 1rem;
         }
 
-        /* БОКОВОЕ УВЕДОМЛЕНИЕ (ЗЕЛЕНОЕ) */
+        /* БОКОВОЕ УВЕДОМЛЕНИЕ */
         .side-notification {
             position: fixed;
             top: 30px;
             right: 20px;
             max-width: 320px;
-            background: rgba(20, 65, 35, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid #3e9f6a;
+            background: rgba(5, 25, 55, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid #2f9eff;
             border-radius: 32px;
             padding: 1rem 1.5rem;
-            color: #f0fff0;
-            box-shadow: 0 15px 30px -10px rgba(0, 40, 0, 0.7), 0 0 0 1px rgba(120, 240, 140, 0.2) inset;
+            color: #e0f0ff;
+            box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 180, 255, 0.3) inset;
             z-index: 900;
             cursor: pointer;
             transition: opacity 0.3s, transform 0.2s;
@@ -324,8 +359,9 @@
             pointer-events: all;
         }
         .side-notification:hover {
-            background: rgba(25, 80, 45, 0.95);
-            border-color: #5fcf8f;
+            background: rgba(0, 40, 80, 0.95);
+            border-color: #5fbbff;
+            box-shadow: 0 0 22px rgba(0, 120, 230, 0.5);
         }
         .notify-title {
             font-weight: 600;
@@ -334,16 +370,16 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 6px;
-            color: #d0ffd0;
+            color: #b4e2ff;
         }
         .notify-text {
             font-size: 0.9rem;
-            color: #d0ecd0;
+            color: #cbebff;
             line-height: 1.4;
         }
         .notify-small {
             font-size: 0.7rem;
-            color: #a0cca0;
+            color: #7bb0da;
             margin-top: 8px;
             display: flex;
             justify-content: space-between;
@@ -354,8 +390,8 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 20, 0.85);
+            backdrop-filter: blur(12px);
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
@@ -363,25 +399,25 @@
         }
         .modal.active { display: flex; }
         .modal-content {
-            background: rgba(16, 22, 20, 0.97);
-            backdrop-filter: blur(18px);
-            border: 1px solid #3e9f6a;
-            border-radius: 38px;
-            padding: 2.2rem;
+            background: rgba(8, 20, 45, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid #3b82f6;
+            border-radius: 44px;
+            padding: 2rem;
             max-width: 550px;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
-            color: #e0f0e0;
+            color: #e0f0ff;
             position: relative;
-            box-shadow: 0 20px 40px -20px black;
+            box-shadow: 0 30px 40px -20px #000, 0 0 0 2px rgba(50, 150, 255, 0.2) inset;
         }
         .modal-content h2 {
-            font-weight: 400;
+            font-weight: 500;
             font-size: 1.8rem;
             margin-bottom: 1.2rem;
-            color: white;
-            border-bottom: 1px solid rgba(100, 200, 120, 0.3);
+            color: #ffffff;
+            border-bottom: 1px solid rgba(0, 150, 255, 0.5);
             padding-bottom: 0.5rem;
             display: flex;
             gap: 10px;
@@ -390,15 +426,15 @@
         .modal-close {
             position: absolute;
             top: 1.3rem; right: 1.7rem;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 30px;
+            background: rgba(0, 100, 200, 0.2);
+            border: 1px solid rgba(0, 180, 255, 0.5);
+            border-radius: 40px;
             width: 38px; height: 38px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; color: #aabbe0; cursor: pointer;
+            font-size: 2rem; color: #7fbcff; cursor: pointer;
             transition: 0.1s;
         }
-        .modal-close:hover { background: rgba(100,150,250,0.1); border-color: rgba(100,150,250,0.3); transform: scale(1.05); }
+        .modal-close:hover { background: rgba(59,130,246,0.4); border-color: #3b82f6; transform: scale(1.05); color: white; }
 
         @media (max-width: 600px) {
             .container { padding: 1rem 1.2rem; }
@@ -407,6 +443,14 @@
             .footer-end { text-align: left; }
             .side-notification { max-width: 260px; top: 15px; right: 10px; }
         }
+        
+        @keyframes softPulse {
+            0% { text-shadow: 0 0 0px rgba(0,160,255,0);}
+            100% { text-shadow: 0 0 6px rgba(0,160,255,0.6);}
+        }
+        .section-title, .logo-min {
+            animation: softPulse 3s infinite alternate;
+        }
     </style>
 </head>
 <body>
@@ -414,105 +458,92 @@
         <header class="header-minimal">
             <div class="logo-line">
                 <span class="logo-min">visualvertex</span>
-                <span class="descriptor">index</span>
-                <span class="descriptor">official</span>
+                <span class="descriptor">mixtic · club</span>
+                <span class="descriptor">deep blue</span>
             </div>
         </header>
 
         <div class="status-micro">
-            ◆ 19 точек входа · важные выделены цветом
+            ✦ 18 точек входа · защищённый канал ✦
         </div>
 
-        <!-- САМЫЕ ВАЖНЫЕ ССЫЛКИ (КРАСНЫЙ) -->
-        <div class="section-title">🔴 Первостепенное</div>
+        <!-- САМЫЕ ВАЖНЫЕ ССЫЛКИ (КРАСНЫЙ ЦВЕТ СОХРАНЁН) -->
+        <div class="section-title">🔴 Первостепенное / Пульсар</div>
         <section class="grid-links" style="margin-bottom: 2rem;">
-            <!-- DragonCorp: новая ссылка -->
             <a href="https://website-dragoncorp0.netlify.app/" class="link-card glass-tile important" target="_blank" rel="noopener">
                 <div class="link-title">🐉 DragonCorp: Защита от аномальных угроз <span class="badge-light">corp</span></div>
                 <div class="link-meta">website-dragoncorp0.netlify.app</div>
                 <div class="link-desc"><span class="minitag">основной лендинг</span> аномалии, угрозы</div>
             </a>
-            <!-- Меня нет МАКСЕ: новая ссылка -->
             <a href="https://sashamaencraft.github.io/I-m-not-here-MAX/" class="link-card glass-tile important" target="_blank" rel="noopener">
                 <div class="link-title">🚫 Меня нет МАКСЕ <span class="badge-light">антифейк</span></div>
                 <div class="link-meta">sashamaencraft.github.io/I-m-not-here-MAX/</div>
                 <div class="link-desc"><span class="minitag legal">опровержение</span> не в MAX</div>
             </a>
-            <!-- Minecraft Auto Clicker: новая ссылка -->
             <a href="https://minecraft-auto-clicker9.netlify.app/" class="link-card glass-tile important" target="_blank" rel="noopener">
                 <div class="link-title">🖱️ Автоматизируйте вашу игру в Minecraft <span class="badge-light">tool</span></div>
                 <div class="link-meta">minecraft-auto-clicker9.netlify.app</div>
                 <div class="link-desc"><span class="minitag mc">autoclicker</span> удобные клики</div>
             </a>
-            <!-- Блог автора: ссылка donatik1.netlify.app (оставляем как было) -->
             <a href="https://donatik1.netlify.app/" class="link-card glass-tile important" target="_blank" rel="noopener">
                 <div class="link-title">❤️ Александр Константинович <span class="badge-light">блогер</span></div>
                 <div class="link-meta">donatik1.netlify.app</div>
                 <div class="link-desc"><span class="minitag">подкасты</span> автор, создаю каждый день</div>
             </a>
+            <!-- ЗАМЕНЁННАЯ ССЫЛКА: list011 теперь ведёт на правильный адрес -->
+            <a href="https://sashamaencraft.github.io/list011/" class="link-card glass-tile important" target="_blank" rel="noopener">
+                <div class="link-title">📋 list011 <span class="badge-light">реестр</span></div>
+                <div class="link-meta">sashamaencraft.github.io/list011/</div>
+                <div class="link-desc"><span class="minitag tool">актуальный список</span> каталог портала</div>
+            </a>
         </section>
 
-        <!-- 🔵 ГОЛУБЫЕ карточки (Форумы, RP, Заявка на администратора) - ЗАЯВКУ УДАЛИТЬ полностью -->
-        <div class="section-title">📌 Основные сообщества & сервисы</div>
+        <!-- 🔵 ГОЛУБЫЕ КАРТОЧКИ (теперь в едином синем клубном стиле) -->
+        <div class="section-title">📡 Основные сообщества & сервисы</div>
         <section class="grid-links">
-            <!-- Форум 1 -->
             <a href="https://visualvertex.forumes.ru/" class="link-card glass-tile primary" target="_blank" rel="noopener">
                 <div class="link-title">💬 Форум 1 · основа <span class="badge-light">основной</span></div>
                 <div class="link-meta">visualvertex.forumes.ru</div>
                 <div class="link-desc"><span class="minitag">главный форум</span> сообщество, обсуждения</div>
             </a>
-            <!-- VisualVertexRP: новая ссылка -->
             <a href="https://sashamaencraft.github.io/VisualVertexRP/" class="link-card glass-tile primary" target="_blank" rel="noopener">
                 <div class="link-title">⛏️ VisualVertexRP <span class="badge-light">roleplay</span></div>
                 <div class="link-meta">sashamaencraft.github.io/VisualVertexRP/</div>
                 <div class="link-desc"><span class="minitag mc">RolePlay</span> уникальный RP-сервер</div>
             </a>
-            <!-- ЗАЯВКА НА АДМИНИСТРАТОРА - УДАЛЕНА (кнопка полностью отсутствует) -->
         </section>
 
-        <!-- ДОПОЛНИТЕЛЬНЫЕ ПРОЕКТЫ -->
-        <div class="section-title extra-margin-top">✨ Дополнительные проекты</div>
+        <!-- ДОПОЛНИТЕЛЬНЫЕ ПРОЕКТЫ (все в глубоком синем стиле) -->
+        <div class="section-title extra-margin-top">🌀 Дополнительные проекты</div>
         <section class="grid-links">
-            <!-- ифо: новая ссылка -->
             <a href="https://sashamaencraft.github.io/ifo/" class="link-card glass-tile secondary" target="_blank">
                 <div class="link-title">🌀 ифо</div>
                 <div class="link-meta">sashamaencraft.github.io/ifo/</div>
                 <div class="link-desc"><span class="minitag">micro</span></div>
             </a>
 
-            <!-- kapilka0 -->
             <a href="https://sashamaencraft.github.io/piggy-bank0/" class="link-card glass-tile secondary" target="_blank" rel="noopener">
                 <div class="link-title">💰 kapilka0 <span class="badge-light">микропроект</span></div>
                 <div class="link-meta">piggy-bank0 (github)</div>
                 <div class="link-desc"><span class="minitag">копилка</span> сохраняйте средства</div>
             </a>
 
-            <!-- IFO Wi-Fi: новая ссылка -->
             <a href="https://sashamaencraft.github.io/Wi-Fi-/" class="link-card glass-tile secondary" target="_blank" rel="noopener">
                 <div class="link-title">📡 IFO Wi-Fi <span class="badge-light">сервис</span></div>
                 <div class="link-meta">sashamaencraft.github.io/Wi-Fi-/</div>
                 <div class="link-desc"><span class="minitag">доступ к сети</span> высокоскоростное соединение, безопасность</div>
             </a>
 
-            <!-- Черновик-Заметки (НОВАЯ КНОПКА) -->
             <a href="https://sashamaencraft.github.io/Chernovik/" class="link-card glass-tile secondary" target="_blank" rel="noopener">
                 <div class="link-title">📝 Черновик-Заметки <span class="badge-light">заметки</span></div>
                 <div class="link-meta">sashamaencraft.github.io/Chernovik/</div>
                 <div class="link-desc"><span class="minitag">тексты</span> черновики, идеи, записи</div>
             </a>
 
-            <!-- Клик драйв (НОВАЯ КНОПКА) -->
             <a href="https://sashamaencraft.github.io/click-drive/" class="link-card glass-tile secondary" target="_blank" rel="noopener">
                 <div class="link-title">🚗 Клик драйв <span class="badge-light">кликер</span></div>
                 <div class="link-meta">sashamaencraft.github.io/click-drive/</div>
                 <div class="link-desc"><span class="minitag game">кликер</span> нажми и крути</div>
-            </a>
-
-            <!-- НОВАЯ КНОПКА: list011.netlify.app (добавлено) -->
-            <a href="https://list011.netlify.app/" class="link-card glass-tile secondary" target="_blank" rel="noopener">
-                <div class="link-title">📋 list011 <span class="badge-light">список</span></div>
-                <div class="link-meta">list011.netlify.app</div>
-                <div class="link-desc"><span class="minitag">ресурс</span> актуальные данные, списки</div>
             </a>
         </section>
 
@@ -530,7 +561,7 @@
                 </div>
                 <div class="footer-end">
                     <strong>© VisualVertex</strong> 2025–2026<br>
-                    <span style="font-size:0.75rem;">минимальная версия</span>
+                    <span style="font-size:0.75rem;">мистическая версия · синий клуб</span>
                     <div class="action-links">
                         <a onclick="openModal('privacy')">данные</a>
                         <a onclick="openModal('terms')">соглашение</a>
@@ -539,9 +570,9 @@
                 </div>
             </div>
             <hr>
-            <div style="display: flex; justify-content: space-between; color: #5e748b; font-size: 0.8rem; padding-top: 0.2rem;">
-                <span>Оптимизировано под все экраны - Изменины кнопки </span>
-                <span>⎔ v3.5</span>
+            <div style="display: flex; justify-content: space-between; color: #5e8ab9; font-size: 0.8rem; padding-top: 0.2rem;">
+                <span>Оптимизировано под все экраны — мистический портал</span>
+                <span>⎔ v4.0</span>
             </div>
         </footer>
     </div>
@@ -549,8 +580,8 @@
     <!-- БОКОВОЕ УВЕДОМЛЕНИЕ -->
     <div id="sideNotify" class="side-notification" onclick="openModal('hosting')">
         <div class="notify-title">
-            <span>⏳ Бесплатный хостинг</span>
-            <span style="font-size:1.2rem;">🟢</span>
+            <span>🌀 Бесплатный хостинг</span>
+            <span style="font-size:1.2rem;">✨</span>
         </div>
         <div class="notify-text">
             Некоторые сайты могут запускаться <strong>до 30 секунд</strong>.<br>
@@ -562,24 +593,23 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА ХОСТИНГ -->
+    <!-- МОДАЛКИ -->
     <div id="hostingModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('hosting')">&times;</span>
-            <h2>⏳ <span>Бесплатный хостинг</span></h2>
+            <h2>🌀 <span>Бесплатный хостинг</span></h2>
             <p style="font-size:1.1rem; margin-bottom:1.5rem;">Некоторые сайты портала размещены на <strong>бесплатных хостингах</strong> (Netlify, Forums и др.). Это означает:</p>
             <ul style="list-style: none; padding: 0;">
                 <li style="margin-bottom: 1rem; padding-left: 1.5rem; position: relative;">• <strong>«Холодный старт»</strong> — если сайтом давно не пользовались, ему нужно 5–30 секунд на «пробуждение».</li>
                 <li style="margin-bottom: 1rem; padding-left: 1.5rem; position: relative;">• <strong>Обновление</strong> — если страница долго загружается или выдаёт ошибку, просто <strong>обновите её 1–2 раза</strong> (F5 или свайп вниз на телефоне).</li>
                 <li style="margin-bottom: 1rem; padding-left: 1.5rem; position: relative;">• <strong>Все ссылки рабочие</strong> — после активации сайты работают стабильно.</li>
             </ul>
-            <p style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 20px; margin-top: 1rem;">
+            <p style="background: rgba(0, 150, 255, 0.1); padding: 1rem; border-radius: 20px; margin-top: 1rem; border-left: 3px solid #3b82f6;">
                 ⚡ Совет: если ссылка не открывается — подождите 20 сек и обновите.
             </p>
         </div>
     </div>
 
-    <!-- МОДАЛКА (оставлена) -->
     <div id="errorWifiModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('errorWifi')">&times;</span>
@@ -592,7 +622,6 @@
         </div>
     </div>
 
-    <!-- модалки privacy, terms -->
     <div id="privacyModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeModal('privacy')">&times;</span><h2>📋 данные</h2><p style="margin-top: 1rem;">Сбор персональных данных осуществляется в соответствии с 152-ФЗ. Мы не передаём информацию третьим лицам. Политика конфиденциальности действует на всех ресурсах VisualVertex.</p></div></div>
     <div id="termsModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeModal('terms')">&times;</span><h2>⚖️ соглашение</h2><p style="margin-top: 1rem;">Используя портал, вы принимаете условия пользовательского соглашения. Запрещено копирование материалов без указания авторства. Все проекты предоставляются «как есть».</p></div></div>
 
@@ -609,7 +638,6 @@
         window.onclick = e => { if (e.target.classList && e.target.classList.contains('modal')) e.target.classList.remove('active'); };
         document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active')); });
 
-        // боковое уведомление
         const sideNotify = document.getElementById('sideNotify');
         setTimeout(() => { sideNotify.classList.add('show'); }, 800);
         let hideTimer = setTimeout(() => { sideNotify.classList.remove('show'); }, 20000);
